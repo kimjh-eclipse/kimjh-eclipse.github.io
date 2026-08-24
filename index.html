@@ -94,9 +94,16 @@
   .lede{max-width:42em;margin:0;font-size:16.5px;color:var(--body);}
   .lede strong{color:var(--ink);font-weight:700;}
 
+  .head-grid{
+    display:grid;grid-template-columns:minmax(0,1fr) auto;
+    gap:28px 48px;align-items:start;
+  }
+  .head-text{display:flex;flex-direction:column;gap:16px;min-width:0;}
+
   .stats{
-    display:flex;flex-wrap:wrap;gap:8px 32px;
-    padding-top:8px;border-top:2px solid var(--plum);margin-top:6px;
+    display:flex;flex-direction:column;gap:14px;
+    padding:2px 0 2px 20px;margin-top:8px;
+    border-left:2px solid var(--gold-bright);
   }
   .stat{display:flex;align-items:baseline;gap:8px;}
   .stat b{
@@ -218,6 +225,12 @@
   @media (max-width:760px){
     .wrap{padding:0 18px 72px;}
     header{padding:48px 0 28px;}
+    .head-grid{grid-template-columns:1fr;gap:22px;}
+    .stats{
+      flex-direction:row;flex-wrap:wrap;gap:8px 28px;
+      padding:8px 0 0;margin-top:0;
+      border-left:none;border-top:2px solid var(--gold-bright);
+    }
     .card{grid-template-columns:1fr;gap:14px;}
     .meta{flex-direction:row;align-items:center;gap:10px;}
     .links{flex-direction:row;flex-wrap:wrap;}
@@ -232,17 +245,21 @@
 <div class="wrap">
   <header>
     <p class="eyebrow">Eclipse · 한국어화 패치 문서고</p>
-    <h1>이클립스 패치 서고</h1>
-    <p class="lede">
+    <div class="head-grid">
+      <div class="head-text">
+        <h1>이클립스 패치 서고</h1>
+        <p class="lede">
       직접 작업한 콘솔 게임 <strong>한국어화·개조 패치</strong>의 기술 문서 사이트와 배포 저장소를 한자리에 모았습니다.
       각 항목의 <strong>문서</strong>는 포맷 분석·폰트 처리·빌드 파이프라인까지 담은 개별 문서 사이트로,
       <strong>배포</strong>는 패치 파일이 있는 GitHub 저장소로 이어집니다.
-    </p>
-    <div class="stats">
-      <div class="stat"><b>10</b><span>프로젝트</span></div>
-      <div class="stat"><b>5</b><span>플랫폼 · PS3 PS2 PSP GBA NDS</span></div>
-      <div class="stat"><b>9</b><span>한국어화</span></div>
-      <div class="stat"><b>1</b><span>역할 교체 개조</span></div>
+        </p>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>10</b><span>프로젝트</span></div>
+        <div class="stat"><b>5</b><span>플랫폼</span></div>
+        <div class="stat"><b>9</b><span>한국어화</span></div>
+        <div class="stat"><b>1</b><span>역할 교체 개조</span></div>
+      </div>
     </div>
   </header>
 
