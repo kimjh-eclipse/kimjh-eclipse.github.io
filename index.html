@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="kimjh-eclipse가 작업한 콘솔 게임 한국어화·개조 패치의 기술 문서와 배포 저장소 색인.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+<title>이클립스 패치 서고</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ground:#E9EBF2;
+    --surface:#FFFFFF;
+    --surface-2:#F3F4F9;
+    --line:#D3D7E4;
+    --ink:#141833;
+    --body:#333A55;
+    --muted:#6B7291;
+    --indigo:#1E2A5A;
+    --gold:#B8901D;
+    --gold-bright:#C9A227;
+    --red:#A52834;
+    --shadow:0 1px 0 rgba(20,24,51,.04), 0 6px 20px -12px rgba(20,24,51,.35);
+    --serif:'Noto Serif KR', 'Nanum Myeongjo', Georgia, serif;
+    --sans:'Noto Sans KR', -apple-system, 'Segoe UI', 'Malgun Gothic', sans-serif;
+    --mono:'IBM Plex Mono', 'Consolas', ui-monospace, monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#0C0F1E;
+      --surface:#151A2F;
+      --surface-2:#1C2240;
+      --line:#2A3155;
+      --ink:#EDEFF8;
+      --body:#C3C8DC;
+      --muted:#868EAE;
+      --indigo:#93A5E0;
+      --gold:#D8B34A;
+      --gold-bright:#E6C463;
+      --red:#E0808B;
+      --shadow:0 1px 0 rgba(0,0,0,.3), 0 10px 26px -16px rgba(0,0,0,.9);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0C0F1E;
+    --surface:#151A2F;
+    --surface-2:#1C2240;
+    --line:#2A3155;
+    --ink:#EDEFF8;
+    --body:#C3C8DC;
+    --muted:#868EAE;
+    --indigo:#93A5E0;
+    --gold:#D8B34A;
+    --gold-bright:#E6C463;
+    --red:#E0808B;
+    --shadow:0 1px 0 rgba(0,0,0,.3), 0 10px 26px -16px rgba(0,0,0,.9);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--ground);
+    color:var(--body);
+    font-family:var(--sans);
+    font-size:16px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 24px 96px;}
+
+  /* ── 머리말 ── */
+  header{
+    padding:72px 0 36px;
+    display:flex;flex-direction:column;gap:18px;
+  }
+  .eyebrow{
+    font-family:var(--mono);font-size:12px;font-weight:600;
+    letter-spacing:.18em;text-transform:uppercase;color:var(--gold);
+    display:flex;align-items:center;gap:12px;
+  }
+  .eyebrow::after{content:"";flex:1;height:1px;background:var(--line);}
+  h1{
+    font-family:var(--serif);font-weight:900;
+    font-size:clamp(34px,5.2vw,54px);line-height:1.15;letter-spacing:-.02em;
+    color:var(--ink);margin:0;text-wrap:balance;
+  }
+  .lede{max-width:60ch;margin:0;font-size:16.5px;color:var(--body);}
+  .lede strong{color:var(--ink);font-weight:700;}
+
+  .stats{
+    display:flex;flex-wrap:wrap;gap:8px 32px;
+    padding-top:8px;border-top:2px solid var(--indigo);margin-top:6px;
+  }
+  .stat{display:flex;align-items:baseline;gap:8px;}
+  .stat b{
+    font-family:var(--mono);font-weight:600;font-size:22px;
+    color:var(--ink);font-variant-numeric:tabular-nums;
+  }
+  .stat span{font-size:13px;color:var(--muted);}
+
+  /* ── 필터 ── */
+  .filters{
+    position:sticky;top:0;z-index:5;
+    display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+    padding:14px 0;margin-bottom:6px;
+    background:var(--ground);border-bottom:1px solid var(--line);
+  }
+  .filters .label{
+    font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--muted);margin-right:4px;
+  }
+  .chip{
+    font-family:var(--mono);font-size:12.5px;font-weight:500;
+    padding:5px 12px;border:1px solid var(--line);border-radius:2px;
+    background:var(--surface);color:var(--body);cursor:pointer;
+    transition:background .15s, color .15s, border-color .15s;
+  }
+  .chip:hover{border-color:var(--gold);color:var(--ink);}
+  .chip[aria-pressed="true"]{
+    background:var(--indigo);border-color:var(--indigo);color:var(--ground);
+  }
+  :root[data-theme="dark"] .chip[aria-pressed="true"],
+  :root:not([data-theme="light"]) .chip[aria-pressed="true"]{color:#0C0F1E;}
+  .chip:focus-visible{outline:2px solid var(--gold-bright);outline-offset:2px;}
+
+  /* ── 목록 ── */
+  .list{display:flex;flex-direction:column;gap:10px;margin-top:18px;}
+  .card{
+    display:grid;
+    grid-template-columns:112px 1fr auto;
+    gap:20px;align-items:start;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-left:3px solid transparent;
+    border-radius:3px;
+    padding:18px 20px;
+    box-shadow:var(--shadow);
+    transition:border-left-color .18s, transform .18s;
+  }
+  .card:hover{border-left-color:var(--gold-bright);transform:translateX(2px);}
+  .card[hidden]{display:none;}
+
+  .meta{display:flex;flex-direction:column;gap:6px;}
+  .plat{
+    display:inline-block;width:fit-content;
+    font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.08em;
+    padding:3px 8px;border-radius:2px;
+    background:var(--indigo);color:var(--surface);
+  }
+  :root[data-theme="dark"] .plat,
+  :root:not([data-theme="light"]) .plat{background:var(--surface-2);color:var(--indigo);border:1px solid var(--line);}
+  .ver{
+    font-family:var(--mono);font-size:13px;font-weight:600;color:var(--ink);
+    font-variant-numeric:tabular-nums;
+  }
+  .date{font-family:var(--mono);font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;}
+
+  .body h2{
+    font-family:var(--serif);font-weight:700;font-size:20px;line-height:1.35;
+    margin:0 0 3px;color:var(--ink);letter-spacing:-.01em;text-wrap:balance;
+  }
+  .body h2 a{text-decoration:none;}
+  .body h2 a:hover{color:var(--gold);}
+  .body h2 a:focus-visible{outline:2px solid var(--gold-bright);outline-offset:3px;}
+  .orig{
+    font-size:12.5px;color:var(--muted);margin:0 0 8px;
+    font-family:var(--sans);
+  }
+  .desc{margin:0;font-size:14.5px;line-height:1.6;max-width:56ch;}
+  .tag{
+    display:inline-block;margin-left:8px;vertical-align:2px;
+    font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.06em;
+    padding:2px 7px;border-radius:2px;
+    border:1px solid var(--red);color:var(--red);
+  }
+
+  .links{display:flex;flex-direction:column;gap:6px;min-width:104px;}
+  .links a{
+    font-family:var(--mono);font-size:12.5px;text-decoration:none;
+    padding:6px 10px;border:1px solid var(--line);border-radius:2px;
+    text-align:center;color:var(--body);
+    transition:background .15s,color .15s,border-color .15s;
+  }
+  .links a:hover{background:var(--surface-2);border-color:var(--gold);color:var(--ink);}
+  .links a:focus-visible{outline:2px solid var(--gold-bright);outline-offset:2px;}
+  .links a.primary{
+    background:var(--indigo);border-color:var(--indigo);color:var(--surface);font-weight:600;
+  }
+  :root[data-theme="dark"] .links a.primary,
+  :root:not([data-theme="light"]) .links a.primary{background:var(--surface-2);color:var(--indigo);border-color:var(--indigo);}
+  .links a.primary:hover{background:var(--gold);border-color:var(--gold);color:#141833;}
+
+  /* ── 꼬리말 ── */
+  footer{
+    margin-top:48px;padding-top:22px;border-top:1px solid var(--line);
+    font-size:13.5px;color:var(--muted);display:flex;flex-direction:column;gap:6px;
+  }
+  footer a{color:var(--indigo);}
+  .empty{
+    display:none;padding:40px 4px;color:var(--muted);font-size:14.5px;
+  }
+  .empty.on{display:block;}
+
+  @media (max-width:760px){
+    .wrap{padding:0 18px 72px;}
+    header{padding:48px 0 28px;}
+    .card{grid-template-columns:1fr;gap:14px;}
+    .meta{flex-direction:row;align-items:center;gap:10px;}
+    .links{flex-direction:row;flex-wrap:wrap;}
+    .links a{flex:1 1 auto;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Eclipse · 한국어화 패치 문서고</p>
+    <h1>이클립스 패치 서고</h1>
+    <p class="lede">
+      직접 작업한 콘솔 게임 <strong>한국어화·개조 패치</strong>의 기술 문서 사이트와 배포 저장소를 한자리에 모았습니다.
+      각 항목의 <strong>문서</strong>는 포맷 분석·폰트 처리·빌드 파이프라인까지 담은 개별 문서 사이트로,
+      <strong>배포</strong>는 패치 파일이 있는 GitHub 저장소로 이어집니다.
+    </p>
+    <div class="stats">
+      <div class="stat"><b>10</b><span>프로젝트</span></div>
+      <div class="stat"><b>5</b><span>플랫폼 · PS3 PS2 PSP GBA NDS</span></div>
+      <div class="stat"><b>9</b><span>한국어화</span></div>
+      <div class="stat"><b>1</b><span>역할 교체 개조</span></div>
+    </div>
+  </header>
+
+  <nav class="filters" aria-label="플랫폼 필터">
+    <span class="label">플랫폼</span>
+    <button class="chip" data-plat="all" aria-pressed="true">전체 10</button>
+    <button class="chip" data-plat="PS3" aria-pressed="false">PS3 2</button>
+    <button class="chip" data-plat="PS2" aria-pressed="false">PS2 2</button>
+    <button class="chip" data-plat="PSP" aria-pressed="false">PSP 4</button>
+    <button class="chip" data-plat="GBA" aria-pressed="false">GBA 1</button>
+    <button class="chip" data-plat="NDS" aria-pressed="false">NDS 1</button>
+  </nav>
+
+  <div class="list" id="list">
+
+    <article class="card" data-plat="PSP">
+      <div class="meta">
+        <span class="plat">PSP</span>
+        <span class="ver">v20260824</span>
+        <span class="date">2026-08-24</span>
+      </div>
+      <div class="body">
+        <h2><a href="https://kimjh-eclipse.github.io/disgaea2-psp-korean/">마계전기 디스가이아 2 PORTABLE</a></h2>
+        <p class="orig">魔界戦記ディスガイア2 PORTABLE · 니폰이치 소프트웨어</p>
+        <p class="desc">텍스트 16,456건 전량 번역. 한글 렌더링을 위해 전각 변환과 EBOOT 버퍼 패치를 함께 적용했습니다.</p>
+      </div>
+      <div class="links">
+        <a class="primary" href="https://kimjh-eclipse.github.io/disgaea2-psp-korean/">문서</a>
+        <a href="https://github.com/kimjh-eclipse/disgaea2-psp-korean">저장소</a>
+        <a href="https://github.com/kimjh-eclipse/disgaea2-psp-korean/releases/latest">내려받기</a>
+      </div>
+    </article>
+
+    <article class="card" data-plat="PS3">
+      <div class="meta">
+        <span class="plat">PS3</span>
+        <span class="ver">v20260823</span>
+        <span class="date">2026-08-23</span>
+      </div>
+      <div class="body">
+        <h2><a href="https://kimjh-eclipse.github.io/srw-og-moon-dwellers-korean-patch/">슈퍼로봇대전 OG 더 문 드웰러즈</a></h2>
+        <p class="orig">スーパーロボット大戦OG THE MOON DWELLERS · BLJS10335</p>
+        <p class="desc">ISO 빠른 패처와 설치·검증·복구 스크립트를 함께 배포합니다. 실행 환경은 RPCS3입니다.</p>
+      </div>
+      <div class="links">
+        <a class="primary" href="https://kimjh-eclipse.github.io/srw-og-moon-dwellers-korean-patch/">문서</a>
+        <a href="https://github.com/kimjh-eclipse/srw-og-moon-dwellers-korean-patch">저장소</a>
+        <a href="https://github.com/kimjh-eclipse/srw-og-moon-dwellers-korean-patch/releases/latest">내려받기</a>
+      </div>
+    </article>
+
+    <article class="card" data-plat="PS3">
+      <div class="meta">
+        <span class="plat">PS3</span>
+        <span class="ver">v1.0</span>
+        <span class="date">2026-08-16</span>
+      </div>
+      <div class="body">
+        <h2><a href="https://kimjh-eclipse.github.io/srw-og-infinite-battle-korean/">슈퍼로봇대전 OG INFINITE BATTLE</a></h2>
+        <p class="orig">スーパーロボット大戦OG INFINITE BATTLE · BLJS10248</p>
+        <p class="desc">전용 패처(SRWIB_Patcher)로 RPCS3 폴더를 지정해 적용합니다. SDAT·CPK·FPK·CSVB 구조와 커스텀 PGF 폰트를 정리했습니다.</p>
+      </div>
+      <div class="links">
+        <a class="primary" href="https://kimjh-eclipse.github.io/srw-og-infinite-battle-korean/">문서</a>
+        <a href="https://github.com/kimjh-eclipse/srw-og-infinite-battle-korean">저장소</a>
+        <a href="https://github.com/kimjh-eclipse/srw-og-infinite-battle-korean/releases/latest">내려받기</a>
+      </div>
+    </article>
+
+    <article class="card" data-plat="PS2">
+      <div class="meta">
+        <span class="plat">PS2</span>
+        <span class="ver">v20260810</span>
+        <span class="date">2026-08-10</span>
+      </div>
+      <div class="body">
+        <h2><a href="https://kimjh-eclipse.github.io/super-robot-wars-ogs-axel-korean-patch/">슈퍼로봇대전 OGs 액셀 역할 교체<span class="tag">개조</span></a></h2>
+        <p class="orig">スーパーロボット大戦OG ORIGINAL GENERATIONS · 라미아 ↔ 액셀</p>
+        <p class="desc">번역 패치가 아니라 역할 교체 개조 패치입니다. 기존 OGs 한글패치 v1.4.3s1 위에 얹어 씁니다.</p>
+      </div>
+      <div class="links">
+        <a class="primary" href="https://kimjh-eclipse.github.io/super-robot-wars-ogs-axel-korean-patch/">문서</a>
+        <a href="https://github.com/kimjh-eclipse/super-robot-wars-ogs-axel-korean-patch">저장소</a>
+        <a href="https://github.com/kimjh-eclipse/super-robot-wars-ogs-axel-korean-patch/raw/main/patch/SRWOGS_AxelRoleSwap_kr_v20260810.xdelta">내려받기</a>
+      </div>
+    </article>
+
+    <article class="card" data-plat="PSP">
+      <div class="meta">
+        <span class="plat">PSP</span>
+        <span class="ver">v1.0</span>
+        <span class="date">2026-08-09</span>
+      </div>
+      <div class="body">
+        <h2><a href="https://kimjh-eclipse.github.io/gundam-age-cosmic-drive-kr/">기동전사 건담 AGE 코즈믹 드라이브</a></h2>
+        <p class="orig">機動戦士ガンダムAGE コズミックドライブ · NPJH-50567</p>
+        <p class="desc">원문 약 82만 자와 UI 이미지 전량을 번역했습니다. Level-5 엔진 포맷·폰트·글리프 주입 기법을 문서로 정리했습니다.</p>
+      </div>
+      <div class="links">
+        <a class="primary" href="https://kimjh-eclipse.github.io/gundam-age-cosmic-drive-kr/">문서</a>
+        <a href="https://github.com/kimjh-eclipse/gundam-age-cosmic-drive-kr">저장소</a>
+        <a href="https://github.com/kimjh-eclipse/gundam-age-cosmic-drive-kr/releases/latest">내려받기</a>
+      </div>
+    </article>
+
+    <article class="card" data-plat="PSP">
+      <div class="meta">
+        <span class="plat">PSP</span>
+        <span class="ver">v1.3</span>
+        <span class="date">2026-08-01</span>
+      </div>
+      <div class="body">
+        <h2><a href="https://kimjh-eclipse.github.io/gundam-battle-assault-survive/">기동전사 건담 어설트 서바이브</a></h2>
+        <p class="orig">機動戦士ガンダム アサルトサヴァイブ · 반다이남코</p>
+        <p class="desc">진행 불가 버그를 이름 양쪽 소스 전수 대조와 정적·완주 검증으로 완전히 잡은 판입니다.</p>
+      </div>
+      <div class="links">
+        <a class="primary" href="https://kimjh-eclipse.github.io/gundam-battle-assault-survive/">문서</a>
+        <a href="https://github.com/kimjh-eclipse/gundam-battle-assault-survive">저장소</a>
+        <a href="https://github.com/kimjh-eclipse/gundam-battle-assault-survive/raw/main/GAS_KR_v1.3.xdelta">내려받기</a>
+      </div>
+    </article>
+
+    <article class="card" data-plat="PSP">
+      <div class="meta">
+        <span class="plat">PSP</span>
+        <span class="ver">v1.2.0</span>
+        <span class="date">2026-07-25</span>
+      </div>
+      <div class="body">
+        <h2><a href="https://kimjh-eclipse.github.io/gundam-battle-universe-kr/">기동전사 건담 배틀 유니버스</a></h2>
+        <p class="orig">機動戦士ガンダム バトルユニバース · ULJS00145</p>
+        <p class="desc">1년전쟁부터 샤아의 반란까지 우주세기 전 시대를 한국어로. 어설트 서바이브와 같은 엔진 계열의 도구 체인 원본입니다.</p>
+      </div>
+      <div class="links">
+        <a class="primary" href="https://kimjh-eclipse.github.io/gundam-battle-universe-kr/">문서</a>
+        <a href="https://github.com/kimjh-eclipse/gundam-battle-universe-kr">저장소</a>
+        <a href="https://github.com/kimjh-eclipse/gundam-battle-universe-kr/releases/latest">내려받기</a>
+      </div>
+    </article>
+
+    <article class="card" data-plat="GBA">
+      <div class="meta">
+        <span class="plat">GBA</span>
+        <span class="ver">v20260719i</span>
+        <span class="date">2026-07-19</span>
+      </div>
+      <div class="body">
+        <h2><a href="https://kimjh-eclipse.github.io/super-robot-wars-og2-axel-korean-patch/">슈퍼로봇대전 OG2 ExcelVir2</a></h2>
+        <p class="orig">スーパーロボット大戦OG2 개조판 ExcelVir2 · 액셀 주인공</p>
+        <p class="desc">개조판을 한국어로 번역했습니다. 재현 빌드와 회귀 검사로 대사·전투 뱅크·정신기·지명을 검증했습니다.</p>
+      </div>
+      <div class="links">
+        <a class="primary" href="https://kimjh-eclipse.github.io/super-robot-wars-og2-axel-korean-patch/">문서</a>
+        <a href="https://github.com/kimjh-eclipse/super-robot-wars-og2-axel-korean-patch">저장소</a>
+        <a href="https://github.com/kimjh-eclipse/super-robot-wars-og2-axel-korean-patch/raw/main/patch/SRWOG2ExcelVir2_kr_v20260719i.xdelta">내려받기</a>
+      </div>
+    </article>
+
+    <article class="card" data-plat="PS2">
+      <div class="meta">
+        <span class="plat">PS2</span>
+        <span class="ver">v20260714</span>
+        <span class="date">2026-07-14</span>
+      </div>
+      <div class="body">
+        <h2><a href="https://kimjh-eclipse.github.io/ace3-korean/">A.C.E.3 THE FINAL</a></h2>
+        <p class="orig">Another Century's Episode 3: The Final · SLPS-25784</p>
+        <p class="desc">BND3 아카이브와 텍스트 컨테이너, 폰트 구조를 규명해 만든 번역 패치입니다.</p>
+      </div>
+      <div class="links">
+        <a class="primary" href="https://kimjh-eclipse.github.io/ace3-korean/">문서</a>
+        <a href="https://github.com/kimjh-eclipse/ace3-korean">저장소</a>
+        <a href="https://github.com/kimjh-eclipse/ace3-korean/releases/latest">내려받기</a>
+      </div>
+    </article>
+
+    <article class="card" data-plat="NDS">
+      <div class="meta">
+        <span class="plat">NDS</span>
+        <span class="ver">v20260711</span>
+        <span class="date">2026-07-11</span>
+      </div>
+      <div class="body">
+        <h2><a href="https://kimjh-eclipse.github.io/sangokushi-taisen-ds-kr/">삼국지대전 DS</a></h2>
+        <p class="orig">三国志大戦DS · SEGA, 아케이드 이식작</p>
+        <p class="desc">스토리·카드 데이터·시스템 텍스트를 전량 번역하고, 무장 명판과 메뉴 그래픽까지 한글로 다시 그렸습니다.</p>
+      </div>
+      <div class="links">
+        <a class="primary" href="https://kimjh-eclipse.github.io/sangokushi-taisen-ds-kr/">문서</a>
+        <a href="https://github.com/kimjh-eclipse/sangokushi-taisen-ds-kr">저장소</a>
+        <a href="https://github.com/kimjh-eclipse/sangokushi-taisen-ds-kr/releases/latest">내려받기</a>
+      </div>
+    </article>
+
+  </div>
+
+  <p class="empty" id="empty">해당 플랫폼의 항목이 없습니다.</p>
+
+  <footer>
+    <div>모든 패치는 본인이 소유한 원본에 적용하는 xdelta 형식입니다. 게임 데이터 자체는 어느 저장소에도 포함되어 있지 않습니다.</div>
+    <div>작업·배포 · <a href="https://github.com/kimjh-eclipse">github.com/kimjh-eclipse</a></div>
+  </footer>
+</div>
+
+<script>
+  (function(){
+    var chips = document.querySelectorAll('.chip');
+    var cards = document.querySelectorAll('.card');
+    var empty = document.getElementById('empty');
+    chips.forEach(function(chip){
+      chip.addEventListener('click', function(){
+        var plat = chip.dataset.plat;
+        chips.forEach(function(c){ c.setAttribute('aria-pressed', String(c === chip)); });
+        var shown = 0;
+        cards.forEach(function(card){
+          var on = (plat === 'all' || card.dataset.plat === plat);
+          card.hidden = !on;
+          if (on) shown++;
+        });
+        empty.classList.toggle('on', shown === 0);
+      });
+    });
+  })();
+</script>
+</body>
+</html>
