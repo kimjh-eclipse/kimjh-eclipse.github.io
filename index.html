@@ -64,6 +64,8 @@
   body{
     margin:0;
     background:var(--ground);
+    word-break:keep-all;
+    overflow-wrap:break-word;
     color:var(--body);
     font-family:var(--sans);
     font-size:16px;
@@ -89,7 +91,7 @@
     font-size:clamp(34px,5.2vw,54px);line-height:1.15;letter-spacing:-.02em;
     color:var(--ink);margin:0;text-wrap:balance;
   }
-  .lede{max-width:60ch;margin:0;font-size:16.5px;color:var(--body);}
+  .lede{max-width:42em;margin:0;font-size:16.5px;color:var(--body);}
   .lede strong{color:var(--ink);font-weight:700;}
 
   .stats{
@@ -167,7 +169,7 @@
     font-size:12.5px;color:var(--muted);margin:0 0 8px;
     font-family:var(--sans);
   }
-  .desc{margin:0;font-size:14.5px;line-height:1.6;max-width:56ch;}
+  .desc{margin:0;font-size:14.5px;line-height:1.6;max-width:40em;}
   .tag{
     display:inline-block;margin-left:8px;vertical-align:2px;
     font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.06em;
